@@ -1,0 +1,207 @@
+================================================================================
+  QA TEST CASES — DETAILED SUMMARY (PLAIN TEXT)
+  Project: Data Smart Chat  |  Date: March 2026
+  No API keys or secrets are included in this document.
+================================================================================
+
+
+PART 1 — WHAT WE DID
+--------------------
+
+OBJECTIVE
+  Full QA and end-to-end (E2E) testing for Data Smart Chat: authentication,
+  dashboard, API integrations, UI/UX responsiveness, error handling, and
+  user flows from start to finish.
+
+TEST STACK
+  - Runner: Playwright (Node.js)
+  - Config: playwright.config.ts — base URL http://localhost:8080, 1 worker,
+    90s timeout per test, trace/video off, screenshot only on failure
+  - Helpers:
+    * Auth: loginAs(page, "user"|"admin"), logout(page). Uses QA_USER_EMAIL,
+      QA_USER_PASSWORD, QA_ADMIN_EMAIL, QA_ADMIN_PASSWORD when set; else signup.
+    * Seed: seedChatbotWithTextKnowledge(page, "user") — creates knowledge +
+      chatbot via UI with QA_Test_ prefix.
+    * Stream: waitForAssistantMarkdownNonEmpty(page) — waits for assistant text.
+
+SECURITY (API KEYS)
+  - No trace/video; screenshot only on failure globally.
+  - API spec has screenshot/trace/video off so key dialogs are never captured.
+  - No raw API keys or credentials in any report or this file.
+
+FIXES APPLIED
+  1. beforeAll + page: Playwright does not allow page in beforeAll. We moved
+     seeding into the first test of each serial suite (dashboard, knowledge-base,
+     public-chatbot, api).
+  2. Landing "has navigation links": Selector updated to a[href="/login"] for
+     stability (link can be wrapped in button).
+  3. Test timeout: Increased to 90s in config so login (60s wait) can complete.
+
+HOW TO RUN
+  1. Start app: npm run dev (http://localhost:8080)
+  2. Optional env: QA_USER_EMAIL, QA_USER_PASSWORD, QA_ADMIN_EMAIL, QA_ADMIN_PASSWORD
+  3. First time: npx playwright install chromium
+  4. Run: npm run e2e  or  npx playwright test
+  5. Report: npx playwright show-report
+
+
+PART 2 — TEST CASES (DETAILED)
+------------------------------
+
+AUTHENTICATION (e2e/auth.spec.ts)
+  AUTH-001   Login page renders required fields
+             Steps: Go to /login; check Email, Password, Login button.
+             Expected: All visible.  Result: PASSED
+
+  AUTH-001B  Signup page renders required fields
+             Steps: Go to /signup; check Full Name, Email, Password, Create account.
+             Expected: All visible.  Result: PASSED
+
+  AUTH-002   Forgot password page is accessible
+             Steps: Go to /forgot-password; check Email field.
+             Expected: Email visible.  Result: PASSED
+
+  AUTH-004   Protected route redirects to login when logged out
+             Steps: Go to /dashboard while logged out.
+             Expected: Redirect to /login.  Result: PASSED
+
+  AUTH-003   Invalid login shows safe fallback
+             Steps: Submit invalid credentials on /login.
+             Expected: Stay on /login.  Result: PASSED
+
+  AUTH-005   Signup validates password length (client-side)
+             Steps: Submit signup with short password.
+             Expected: Stay on /signup.  Result: PASSED
+
+  AUTH-006   Valid user login redirects to dashboard
+             Steps: loginAs(user); check URL and "Welcome back".
+             Expected: /dashboard, heading visible.  Result: FAILED (timeout)
+
+  AUTH-007   Logout returns to landing
+             Steps: loginAs(user); logout(); check URL and login link.
+             Expected: /, login link visible.  Result: FAILED (timeout)
+
+
+LANDING (e2e/landing.spec.ts)
+  LAND-001   Renders hero section
+             Steps: Go to /; check h1.  Expected: Hero visible.  Result: PASSED
+
+  LAND-002   Has navigation links
+             Steps: Go to /; check login link.  Expected: Link visible.
+             Result: FAILED then FIXED (selector)
+
+
+PUBLIC CHATBOT (e2e/public-chatbot.spec.ts)
+  PUBLIC-001 Shows error for non-existent chatbot
+             Steps: Go to /chatbot/00000000-...; check body content.
+             Expected: Error or empty state.  Result: FAILED then FIXED (beforeAll)
+
+  PUBLIC-002 Renders public chat and streams assistant reply
+             Steps: Seed; go to /chatbot/:id; send message; wait stream + sources.
+             Expected: Stream and knowledge name.  Result: DID NOT RUN
+
+
+DASHBOARD (e2e/dashboard.spec.ts)
+  CHAT-001   Streams assistant reply and shows knowledge sources
+             Steps: loginAs; seed; go to chat; send marker; check stream + name.
+             Expected: Markdown and knowledge name.  Result: FAILED then FIXED
+
+  DASH-001   Dashboard overview loads and renders key sections
+             Steps: loginAs; go to /dashboard; check Welcome back, message usage.
+             Expected: Sections visible.  Result: DID NOT RUN
+
+
+KNOWLEDGE BASE (e2e/knowledge-base.spec.ts)
+  KNOW-001   Shows processed knowledge as Ready and preview content
+             Steps: loginAs; seed; go to knowledge; open preview.
+             Expected: Ready, name and content.  Result: FAILED then FIXED
+
+  KNOW-002   Delete knowledge removes the record
+             Steps: Delete seeded row; confirm.  Expected: Row gone.
+             Result: DID NOT RUN
+
+
+API (e2e/api.spec.ts)
+  API-001    Valid key returns response (and sources when requested)
+             Steps: loginAs; seed; generate key; call api-chat with key.
+             Expected: 200, response (+ sources).  Result: FAILED (login timeout)
+
+  API-002    Invalid key returns 401
+             Steps: Call api-chat with invalid key.
+             Expected: 401, error.  Result: DID NOT RUN
+
+
+ADMIN (e2e/admin.spec.ts)
+  ADMIN-001  Non-admin cannot access /dashboard/admin
+             Steps: loginAs(user); go to /dashboard/admin.
+             Expected: Access denied text.  Result: FAILED (login timeout)
+
+  ADMIN-002  Admin can load admin page without crashing
+             Steps: If QA_ADMIN_* set: loginAs(admin); go to admin.
+             Expected: Admin dashboard heading.  Result: DID NOT RUN
+
+
+BILLING (e2e/billing.spec.ts)
+  BILL-001   Billing page renders for logged-in user
+             Steps: loginAs(user); go to /dashboard/billing.
+             Expected: Billing heading.  Result: FAILED (login timeout)
+
+
+RESPONSIVE (e2e/responsive.spec.ts)
+  RESP-001   Landing renders on mobile (375x812)
+             Result: PASSED
+
+  RESP-002   Landing renders on tablet (768x1024)
+             Result: PASSED
+
+  RESP-003   Login renders on desktop (1280x720)
+             Result: PASSED
+
+
+PART 3 — HOW IT WENT (RUN SUMMARY)
+----------------------------------
+
+Last run (from your terminal):
+  Total: 24 tests
+  Passed: 10
+  Failed: 9
+  Did not run: 5 (skipped after previous failure in serial suite)
+
+Passed (10):
+  AUTH-001, AUTH-001B, AUTH-002, AUTH-004, AUTH-003, AUTH-005,
+  LAND-001, RESP-001, RESP-002, RESP-003
+
+Failed (9) and causes:
+  - ADMIN-001, AUTH-006, AUTH-007, BILL-001, API-001: timeout in loginAs
+    (no dashboard redirect — credentials/backend/email verification)
+  - CHAT-001, KNOW-001, PUBLIC-001: beforeAll(page) error — FIXED
+  - Landing "has navigation links": selector — FIXED
+
+Did not run (5):
+  ADMIN-002, API-002, DASH-001, KNOW-002, PUBLIC-002
+  (each depends on the previous test in its serial suite passing)
+
+
+PART 4 — FILES REFERENCE
+------------------------
+
+  Config:    playwright.config.ts
+  Specs:     e2e/auth.spec.ts, landing.spec.ts, public-chatbot.spec.ts,
+             dashboard.spec.ts, knowledge-base.spec.ts, api.spec.ts,
+             admin.spec.ts, billing.spec.ts, responsive.spec.ts
+  Helpers:   e2e/helpers/auth.ts, seed.ts, stream.ts
+  Reports:   QA_REPORT.md, QA_TEST_CASES_SUMMARY.md, this file (.txt)
+
+
+PART 5 — NEXT STEPS
+--------------------
+
+  1. Run app and backend at http://localhost:8080 with valid Supabase.
+  2. Set QA_USER_EMAIL and QA_USER_PASSWORD for a verified account.
+  3. Re-run: npm run e2e (expect more passes after fixes and with login working).
+  4. Re-assess production readiness when login-dependent tests pass.
+
+
+================================================================================
+  End of QA Test Cases Summary. No API keys or secrets included.
+================================================================================
