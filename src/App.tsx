@@ -37,6 +37,8 @@ import AboutPage from "./pages/AboutPage";
 import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import MissingSupabaseConfig from "@/components/MissingSupabaseConfig";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,9 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        {!isSupabaseConfigured ? (
+          <MissingSupabaseConfig />
+        ) : (
         <BrowserRouter>
           <AuthProvider>
             <Routes>
@@ -91,6 +96,7 @@ const App = () => (
             </Routes>
           </AuthProvider>
         </BrowserRouter>
+        )}
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

@@ -2,16 +2,30 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const rawUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const rawKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+
+/** False when env vars were missing at build time (e.g. not set in Vercel). */
+export const isSupabaseConfigured = Boolean(
+  typeof rawUrl === 'string' && rawUrl.length > 0 && typeof rawKey === 'string' && rawKey.length > 0
+);
+
+// Never pass undefined into createClient — Supabase uses `new URL(url)` and throws, which
+// crashes the whole app (blank page) before React renders.
+const SUPABASE_URL = isSupabaseConfigured
+  ? rawUrl!
+  : 'https://env-not-set-at-build.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = isSupabaseConfigured
+  ? rawKey!
+  : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.env-not-set';
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
-  }
+    storage: isSupabaseConfigured ? localStorage : undefined,
+    persistSession: isSupabaseConfigured,
+    autoRefreshToken: isSupabaseConfigured,
+  },
 });
