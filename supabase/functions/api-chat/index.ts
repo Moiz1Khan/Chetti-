@@ -6,6 +6,14 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, content-type",
 };
 
+function normalizeOpenAIModel(input?: string | null) {
+  const model = (input || "").toLowerCase();
+  if (model.includes("gpt-5")) return "gpt-5-mini";
+  if (model.includes("gpt-4o")) return "gpt-4o-mini";
+  if (model.includes("gemini")) return "gpt-4o-mini";
+  return "gpt-4o-mini";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -127,19 +135,19 @@ serve(async (req) => {
 
     const systemPrompt = (chatbot.system_prompt || "You are a helpful AI assistant.") + ragContext;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured");
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: chatbot.model || "google/gemini-3-flash-preview",
+        model: normalizeOpenAIModel(chatbot.model),
         messages: [{ role: "system", content: systemPrompt }, ...chatMessages],
         temperature: chatbot.temperature ?? 0.7,
         max_tokens: chatbot.max_tokens ?? 1024,

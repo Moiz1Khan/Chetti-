@@ -7,6 +7,14 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function normalizeOpenAIModel(input?: string | null) {
+  const model = (input || "").toLowerCase();
+  if (model.includes("gpt-5")) return "gpt-5-mini";
+  if (model.includes("gpt-4o")) return "gpt-4o-mini";
+  if (model.includes("gemini")) return "gpt-4o-mini";
+  return "gpt-4o-mini";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -15,9 +23,9 @@ serve(async (req) => {
   try {
     const { messages, model, temperature, max_tokens, system_prompt, chatbot_id, include_sources, public_access, session_id } = await req.json();
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured");
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -132,7 +140,7 @@ serve(async (req) => {
     }
 
     const systemMessage = (effectiveSystemPrompt || "You are a helpful AI assistant.") + ragContext;
-    const aiModel = effectiveModel || "google/gemini-3-flash-preview";
+    const aiModel = normalizeOpenAIModel(effectiveModel);
     const temp = typeof effectiveTemp === "number" ? effectiveTemp : 0.7;
     const maxTok = typeof effectiveMaxTokens === "number" ? effectiveMaxTokens : 1024;
 
@@ -176,10 +184,10 @@ serve(async (req) => {
       }
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
