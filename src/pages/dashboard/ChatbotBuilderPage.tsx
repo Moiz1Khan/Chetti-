@@ -22,8 +22,9 @@ import {
 } from "@/components/ui/select";
 import {
   ArrowLeft, Save, Bot, Settings2, Brain, Palette, MessageSquare,
-  Send, RotateCcw, Sparkles, FileText, Link2, Type,
+  Send, RotateCcw, Sparkles, FileText, Link2, Type, Info,
 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import AppearancePanel from "@/components/dashboard/AppearancePanel";
 import { getIconComponent } from "@/components/dashboard/AvatarPickerModal";
@@ -56,7 +57,11 @@ const TEMPLATES = [
   },
 ];
 
-type ChatMessage = { role: "user" | "assistant"; content: string };
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+  sources?: Array<{ file_name: string; content_preview: string }>;
+};
 
 const ChatbotBuilderPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -313,6 +318,7 @@ const ChatbotBuilderPage = () => {
     setIsStreaming(true);
 
     let assistantContent = "";
+    let streamSources: Array<{ file_name: string; content_preview: string }> = [];
 
     try {
       const resp = await fetch(
@@ -330,6 +336,7 @@ const ChatbotBuilderPage = () => {
             temperature,
             max_tokens: maxTokens,
             chatbot_id: isNew ? undefined : id,
+            include_sources: true,
           }),
         }
       );
@@ -361,6 +368,19 @@ const ChatbotBuilderPage = () => {
 
           try {
             const parsed = JSON.parse(jsonStr);
+            if (parsed.sources) {
+              streamSources = parsed.sources;
+              setChatMessages((prev) => {
+                const last = prev[prev.length - 1];
+                if (last?.role === "assistant") {
+                  return prev.map((m, i) =>
+                    i === prev.length - 1 ? { ...m, sources: streamSources } : m
+                  );
+                }
+                return prev;
+              });
+              continue;
+            }
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantContent += content;
@@ -368,10 +388,10 @@ const ChatbotBuilderPage = () => {
                 const last = prev[prev.length - 1];
                 if (last?.role === "assistant") {
                   return prev.map((m, i) =>
-                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
+                    i === prev.length - 1 ? { ...m, content: assistantContent, sources: streamSources } : m
                   );
                 }
-                return [...prev, { role: "assistant", content: assistantContent }];
+                return [...prev, { role: "assistant", content: assistantContent, sources: streamSources }];
               });
             }
           } catch {
@@ -385,7 +405,7 @@ const ChatbotBuilderPage = () => {
     } finally {
       setIsStreaming(false);
     }
-  }, [chatInput, chatMessages, isStreaming, systemPrompt, model, temperature, maxTokens, toast]);
+  }, [chatInput, chatMessages, isStreaming, systemPrompt, model, temperature, maxTokens, toast, id, isNew]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -566,6 +586,25 @@ const ChatbotBuilderPage = () => {
 
                 {/* Knowledge Tab */}
                 <TabsContent value="knowledge" className="space-y-4 mt-4">
+                  <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Attach documents to this chatbot</AlertTitle>
+                    <AlertDescription className="text-xs leading-relaxed">
+                      Uploading a file under <strong>Knowledge Base</strong> only indexes it. You must <strong>check the boxes</strong> below
+                      and click <strong>Save</strong> so this chatbot can use the PDF in replies. Nothing is linked until you save.
+                    </AlertDescription>
+                  </Alert>
+                  {!isNew &&
+                    knowledgeItems &&
+                    knowledgeItems.some((i) => (i as { status?: string }).status === "ready") &&
+                    selectedKnowledge.length === 0 && (
+                      <Alert variant="destructive">
+                        <AlertTitle>No sources linked</AlertTitle>
+                        <AlertDescription className="text-xs">
+                          You have Ready documents, but none are selected for this chatbot. Select at least one PDF and save.
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Select knowledge sources to train your chatbot. Only "Ready" sources can be linked.</p>
                     {selectedKnowledge.length > 0 && (
@@ -716,6 +755,16 @@ const ChatbotBuilderPage = () => {
                       {msg.content}
                       {msg.role === "assistant" && isStreaming && i === chatMessages.length - 1 && (
                         <span className="inline-block w-1.5 h-4 ml-0.5 bg-foreground/50 animate-pulse" />
+                      )}
+                      {msg.role === "assistant" && msg.sources && msg.sources.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-border/60 text-[10px] text-muted-foreground space-y-0.5">
+                          <p className="font-medium text-foreground/80">Sources</p>
+                          {msg.sources.map((s, j) => (
+                            <p key={j} className="truncate" title={s.content_preview}>
+                              · {s.file_name}
+                            </p>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </div>

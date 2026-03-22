@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { getPublicSiteUrl } from "@/lib/site-url";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ShareChatbotDialogProps {
@@ -51,7 +52,7 @@ const ShareChatbotDialog = ({ chatbotId, chatbotName, open, onOpenChange }: Shar
     },
   });
 
-  const baseUrl = window.location.origin;
+  const baseUrl = getPublicSiteUrl() || window.location.origin;
   const publicUrl = `${baseUrl}/chatbot/${chatbotId}`;
   const primaryColor = settings?.primary_color || "#4F46E5";
 

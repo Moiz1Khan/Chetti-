@@ -102,15 +102,38 @@ serve(async (req) => {
           // Get the latest user message for search
           const lastUserMsg = [...messages].reverse().find((m: any) => m.role === "user");
           if (lastUserMsg && chatbotOwnerId) {
-            const { data: chunks } = await supabase.rpc("search_knowledge_chunks", {
+            const { data: ftsChunks } = await supabase.rpc("search_knowledge_chunks", {
               p_user_id: chatbotOwnerId,
               p_query: lastUserMsg.content,
               p_knowledge_ids: knowledgeIds,
               p_limit: 5,
             });
 
-            if (chunks && chunks.length > 0) {
-              ragContext = "\n\nUse the following context to answer the user's question. If the context doesn't contain relevant information, use your general knowledge but mention that.\n\n---CONTEXT---\n" +
+            let chunks: Array<{ id: string; knowledge_id: string; content: string; chunk_index: number }> =
+              ftsChunks && ftsChunks.length > 0 ? [...ftsChunks] : [];
+            let ragFromFallback = false;
+
+            // Full-text search often misses paraphrased questions; fall back to first chunks so the model still sees the docs.
+            if (chunks.length === 0) {
+              const { data: fb } = await supabase
+                .from("knowledge_chunks")
+                .select("id, knowledge_id, content, chunk_index")
+                .eq("user_id", chatbotOwnerId)
+                .in("knowledge_id", knowledgeIds)
+                .order("chunk_index", { ascending: true })
+                .limit(8);
+              if (fb && fb.length > 0) {
+                chunks = fb;
+                ragFromFallback = true;
+              }
+            }
+
+            if (chunks.length > 0) {
+              const intro = ragFromFallback
+                ? "\n\nBelow are excerpts from the linked knowledge base (keyword search did not match this exact question; use them if relevant, otherwise say the documents do not cover this topic).\n\n---CONTEXT---\n"
+                : "\n\nUse the following context to answer. When the answer is in the context, base your reply on it. If the context does not cover the question, say so clearly.\n\n---CONTEXT---\n";
+
+              ragContext = intro +
                 chunks.map((c: any) => c.content).join("\n\n") +
                 "\n---END CONTEXT---\n";
 

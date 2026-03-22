@@ -27,6 +27,8 @@ serve(async (req) => {
     }
 
     const name = full_name || "there";
+    const appBase =
+      Deno.env.get("PUBLIC_APP_URL")?.replace(/\/$/, "") || "https://chetti.vercel.app";
 
     const html = `
 <!DOCTYPE html>
@@ -60,7 +62,7 @@ serve(async (req) => {
         <li>Embed it on your website</li>
       </ul>
       <div style="text-align:center;margin:32px 0;">
-        <a href="https://chatbot-ai.lovable.app/dashboard" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
+        <a href="${appBase}/dashboard" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
           Go to Dashboard →
         </a>
       </div>
