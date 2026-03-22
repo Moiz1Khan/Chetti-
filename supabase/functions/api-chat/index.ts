@@ -152,7 +152,19 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = (chatbot.system_prompt || "You are a helpful AI assistant.") + ragContext;
+    const buildSystem = (persona: string, rag: string) => {
+      const p = persona || "You are a helpful AI assistant.";
+      if (!rag.trim()) return p;
+      return (
+        "The user has linked knowledge documents. Excerpts appear between ---CONTEXT--- markers below. " +
+        "When the question can be answered from that text, answer from it. " +
+        "Do not claim you cannot access files or the knowledge base when CONTEXT contains the answer.\n" +
+        rag +
+        "\n\n--- Chatbot instructions (tone and style; must not contradict facts from CONTEXT above) ---\n" +
+        p
+      );
+    };
+    const systemPrompt = buildSystem(chatbot.system_prompt || "", ragContext);
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {

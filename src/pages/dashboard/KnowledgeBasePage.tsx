@@ -1,11 +1,13 @@
 import { useState, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   FolderOpen, Upload, Trash2, FileText, Link as LinkIcon, Type,
-  Plus, Globe, FileUp, Loader2, CheckCircle2, XCircle, Clock, Eye, X,
+  Plus, Globe, FileUp, Loader2, CheckCircle2, XCircle, Clock, Eye, X, Info,
 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -290,6 +292,24 @@ const KnowledgeBasePage = () => {
           <Plus className="h-4 w-4 mr-1" /> Add Knowledge
         </Button>
       </div>
+
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>Why is chatbot_id empty?</AlertTitle>
+        <AlertDescription className="text-xs sm:text-sm leading-relaxed space-y-2">
+          <p>
+            <strong>That column is often NULL — it does not mean the file is broken.</strong> Chunks in{" "}
+            <code className="text-[10px] bg-muted px-1 rounded">knowledge_chunks</code> are what the AI reads.
+            To let a <em>specific</em> chatbot use this file, open{" "}
+            <Link to="/dashboard/chatbots" className="text-primary underline font-medium">
+              My Chatbots
+            </Link>{" "}
+            → edit your bot → <strong>Know.</strong> tab → check the file → <strong>Save</strong>. Links are stored in the{" "}
+            <code className="text-[10px] bg-muted px-1 rounded">chatbot_knowledge</code> table (not in{" "}
+            <code className="text-[10px] bg-muted px-1 rounded">knowledge_base.chatbot_id</code>).
+          </p>
+        </AlertDescription>
+      </Alert>
 
       {/* Stats */}
       {items && items.length > 0 && (

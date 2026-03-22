@@ -15,6 +15,20 @@ function normalizeOpenAIModel(input?: string | null) {
   return "gpt-4o-mini";
 }
 
+/** Put KB context before persona so "contact support" style prompts don't override facts. */
+function buildSystemMessage(personaPrompt: string, ragContext: string): string {
+  const persona = personaPrompt || "You are a helpful AI assistant.";
+  if (!ragContext.trim()) return persona;
+  return (
+    "The user has linked knowledge documents. Excerpts appear between ---CONTEXT--- markers below. " +
+    "When the user's question can be answered from that text, answer from it. " +
+    "Do not claim you cannot access files, uploads, or the knowledge base when CONTEXT below contains the answer.\n" +
+    ragContext +
+    "\n\n--- Chatbot instructions (tone and style; must not contradict facts from CONTEXT above) ---\n" +
+    persona
+  );
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -162,7 +176,7 @@ serve(async (req) => {
       }
     }
 
-    const systemMessage = (effectiveSystemPrompt || "You are a helpful AI assistant.") + ragContext;
+    const systemMessage = buildSystemMessage(effectiveSystemPrompt || "", ragContext);
     const aiModel = normalizeOpenAIModel(effectiveModel);
     const temp = typeof effectiveTemp === "number" ? effectiveTemp : 0.7;
     const maxTok = typeof effectiveMaxTokens === "number" ? effectiveMaxTokens : 1024;
