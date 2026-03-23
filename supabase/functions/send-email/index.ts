@@ -1,4 +1,14 @@
+/**
+ * Transactional email via Resend (SDK).
+ * Call from the app with a logged-in user JWT, or with the service role key for server/internal use.
+ *
+ * Deploy: supabase secrets set RESEND_API_KEY=...
+ *         supabase functions deploy send-email
+ *
+ * Optional: AUTH_FROM_EMAIL — default "From" (must be a verified sender/domain in Resend).
+ */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { Resend } from "npm:resend@4.0.1";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
@@ -18,14 +28,12 @@ serve(async (req) => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    // Authenticate the caller
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     const authHeader = req.headers.get("Authorization");
 
-    // Allow internal calls with service role key
     const isInternal = authHeader?.includes(supabaseServiceKey);
 
     if (!isInternal) {
@@ -35,7 +43,7 @@ serve(async (req) => {
       if (error || !user) {
         return new Response(
           JSON.stringify({ error: "Unauthorized" }),
-          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
         );
       }
     }
@@ -45,46 +53,48 @@ serve(async (req) => {
     if (!to || !subject || (!html && !text)) {
       return new Response(
         JSON.stringify({ error: "to, subject, and html or text are required" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
-    const emailPayload: Record<string, unknown> = {
-      from: from || "Chetti <noreply@paisoltechnology.com>",
+    const defaultFrom =
+      Deno.env.get("AUTH_FROM_EMAIL") || "Chetti <noreply@paisoltechnology.com>";
+
+    const resend = new Resend(RESEND_API_KEY);
+
+    const payload: {
+      from: string;
+      to: string[];
+      subject: string;
+      html?: string;
+      text?: string;
+    } = {
+      from: from || defaultFrom,
       to: Array.isArray(to) ? to : [to],
       subject,
     };
-    if (html) emailPayload.html = html;
-    if (text) emailPayload.text = text;
+    if (html) payload.html = html;
+    if (text) payload.text = text;
 
-    const resendRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(emailPayload),
-    });
+    const { data, error: sendError } = await resend.emails.send(payload);
 
-    const resendData = await resendRes.json();
-
-    if (!resendRes.ok) {
-      console.error("Resend API error:", resendRes.status, resendData);
+    if (sendError) {
+      console.error("Resend SDK error:", sendError);
       return new Response(
-        JSON.stringify({ error: "Failed to send email", details: resendData }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Failed to send email", details: sendError }),
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
     return new Response(
-      JSON.stringify({ success: true, id: resendData.id }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ success: true, id: data?.id, data }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
     console.error("send-email error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });

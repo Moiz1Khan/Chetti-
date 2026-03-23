@@ -4,12 +4,19 @@ Do **not** commit API keys. Add secrets only in **Supabase Dashboard** or via `s
 
 ## 1. Welcome email & other Edge Functions (`RESEND_API_KEY`)
 
-Functions such as `welcome-email`, `send-email`, `send-otp-email`, and `notify-chatbot-owner` call Resend’s **HTTP API** and read:
+Functions such as `welcome-email`, `send-email`, `send-otp-email`, and `notify-chatbot-owner` use Resend. The **`send-email`** function uses the official **`npm:resend`** SDK (same `RESEND_API_KEY`).
 
-| Secret            | Purpose                          |
-|-------------------|----------------------------------|
-| `RESEND_API_KEY`  | Resend API key (Bearer token)    |
-| `PUBLIC_APP_URL`  | Optional. Base URL for links in welcome email (default: `https://chetti.vercel.app`) |
+| Secret              | Purpose                          |
+|---------------------|----------------------------------|
+| `RESEND_API_KEY`    | Resend API key (Bearer token)    |
+| `AUTH_FROM_EMAIL`   | Optional. Default `From:` for `send-email` (e.g. `Chetti <noreply@yourdomain.com>`). Must match a verified domain in Resend. |
+| `PUBLIC_APP_URL`    | Optional. Base URL for links in welcome email (default: `https://chetti.vercel.app`) |
+
+**Signup / `welcome-email`:** The repo sets `[functions.welcome-email] verify_jwt = false` in `supabase/config.toml`. Without this, **new users have no session JWT** until they confirm email, so the Edge Function gateway would **block** the `invoke` with **401** and no welcome mail would send. After pulling this config, redeploy:
+
+```bash
+supabase functions deploy welcome-email
+```
 
 **Where to set (Supabase Cloud):**
 
@@ -28,7 +35,28 @@ supabase secrets set PUBLIC_APP_URL=https://chetti.vercel.app --project-ref YOUR
 
 Redeploy Edge Functions after changing secrets if your workflow requires it.
 
-**Sender in code:** `Chetti <noreply@paisoltechnology.com>` — the domain must be **verified** in Resend.
+**Sender in code:** default `Chetti <noreply@paisoltechnology.com>` (override with `AUTH_FROM_EMAIL` or per-request `from` in the JSON body). The domain must be **verified** in Resend.
+
+**Deploy `send-email`:**
+
+```bash
+supabase functions deploy send-email
+```
+
+**Call from React** (user must be signed in so the Supabase client sends the session JWT):
+
+```ts
+const { data, error } = await supabase.functions.invoke("send-email", {
+  body: {
+    to: "user@example.com",
+    subject: "Hello",
+    html: "<h1>Test</h1>",
+    // optional: text, from
+  },
+});
+```
+
+This sends **transactional** mail when your app invokes the function. It does **not** replace Supabase **signup confirmation / password reset** emails — those still need **Auth SMTP**, the **`auth-send-email`** hook, or a custom server flow.
 
 ---
 
@@ -53,6 +81,12 @@ Enable **custom SMTP** and use Resend’s SMTP (confirm current values in [Resen
 3. Save, then send a test from Supabase if available.
 
 **Note:** Auth email **templates** (subject/body) are still edited under **Authentication** → **Email templates** in Supabase.
+
+### Auth emails via Resend API instead of SMTP (recommended if SMTP fails)
+
+The Edge Function **`auth-send-email`** implements the **Send Email hook**: confirmation, reset password, magic link, etc. are sent with **Resend’s HTTP API** (same key as above). Supabase Auth still controls users and links; only **delivery** changes.
+
+See **`docs/RESEND_AUTH_HOOK.md`** for deploy steps and Dashboard configuration.
 
 ---
 

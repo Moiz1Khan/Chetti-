@@ -41,22 +41,36 @@ const Signup = () => {
         emailRedirectTo: getPublicSiteUrl(),
       },
     });
-    setLoading(false);
 
     if (error) {
+      setLoading(false);
       toast({ title: "Signup Failed", description: error.message, variant: "destructive" });
-    } else {
-      // Trigger welcome email
-      try {
-        await supabase.functions.invoke("welcome-email", {
-          body: { email: result.data.email, full_name: result.data.fullName },
-        });
-      } catch (emailErr) {
-        console.error("Welcome email failed:", emailErr);
-      }
-      toast({ title: "Account Created!", description: "Check your email to verify your account." });
-      navigate("/login");
+      return;
     }
+
+    // Welcome email (Resend). Requires Edge Function `welcome-email` with verify_jwt=false
+    // so it can run when session is still null (email confirmation pending).
+    const { error: welcomeError } = await supabase.functions.invoke("welcome-email", {
+      body: { email: result.data.email, full_name: result.data.fullName },
+    });
+    setLoading(false);
+
+    if (welcomeError) {
+      console.error("Welcome email failed:", welcomeError);
+      toast({
+        title: "Account created",
+        description:
+          welcomeError.message ||
+          "We could not send the welcome email. Check spam; confirmation mail comes from your Supabase project (enable SMTP or Auth hook if missing).",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Account created!",
+        description: "Check your email for the verification link and your welcome message.",
+      });
+    }
+    navigate("/login");
   };
 
   return (
