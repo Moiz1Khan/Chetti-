@@ -36,20 +36,19 @@
 
   <!-- Chetti embed (same snippet as dashboard “Widget” tab) -->
   <script>
-    (function () {
-      var d = document,
-        s = d.createElement("script");
-      s.src = "http://localhost:8080/widget.js";
-      s.onload = function () {
+    (function(){
+      var d=document,s=d.createElement('script');
+      s.src='https://chetti.vercel.app/widget.js';
+      s.onload=function(){
         ChatbotWidget.init({
-          chatbot_id: "dd8969d5-bc9a-4b1a-9a52-c20e1e1f84c1",
-          position: "bottom-right",
-          color: "#7c3aed",
+          chatbot_id:'dd8969d5-bc9a-4b1a-9a52-c20e1e1f84c1',
+          position:'bottom-right',
+          color:'#7c3aed'
         });
       };
       d.body.appendChild(s);
     })();
-  </script>
+    </script>
 
   <div class="hint">
     <strong>External sites:</strong> use your production URL for <code>s.src</code> and pass

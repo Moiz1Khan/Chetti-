@@ -47,7 +47,8 @@ export const useSubscription = () => {
     try {
       const { data, error } = await supabase.functions.invoke("check-subscription");
       if (error) throw error;
-      const plan = getPlanFromProductId(data.product_id);
+      const planFromApi = data.plan as PlanKey | undefined;
+      const plan = planFromApi ?? getPlanFromProductId(data.product_id);
       setState({
         loading: false,
         subscribed: data.subscribed,

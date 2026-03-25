@@ -74,11 +74,13 @@ const BillingPage = () => {
     }
   }, [searchParams, toast, refresh]);
 
-  const handleCheckout = async (priceId: string) => {
-    setCheckoutLoading(priceId);
+  const handleCheckout = async (planKey: string) => {
+    setCheckoutLoading(planKey);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { priceId },
+        // Use planKey so the Edge Function can create the correct Stripe subscription
+        // using `price_data` (no dependency on stale Stripe price/product IDs).
+        body: { planKey },
       });
       if (error) throw error;
       if (data?.url) window.open(data.url, "_blank");
@@ -175,9 +177,9 @@ const BillingPage = () => {
                     className="w-full"
                     variant={isCurrent ? "outline" : plan.highlighted ? "default" : "outline"}
                     disabled={isCurrent || !!checkoutLoading}
-                    onClick={() => handleCheckout(plan.price_id!)}
+                    onClick={() => handleCheckout(key)}
                   >
-                    {checkoutLoading === plan.price_id ? (
+                    {checkoutLoading === key ? (
                       <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Loading...</>
                     ) : isCurrent ? "Current Plan" : "Upgrade"}
                   </Button>

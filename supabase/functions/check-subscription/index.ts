@@ -63,6 +63,7 @@ serve(async (req) => {
     const hasActiveSub = subscriptions.data && subscriptions.data.length > 0;
     let productId = null;
     let subscriptionEnd = null;
+    let plan: string = "free";
 
     if (hasActiveSub) {
       const subscription = subscriptions.data[0];
@@ -71,11 +72,26 @@ serve(async (req) => {
         subscriptionEnd = new Date(endTimestamp * 1000).toISOString();
       }
       productId = subscription.items?.data?.[0]?.price?.product ?? null;
+
+      const itemPrice = subscription.items?.data?.[0]?.price;
+      const unitAmount = itemPrice?.unit_amount ?? null;
+      const currency = itemPrice?.currency ?? null;
+      const interval = itemPrice?.recurring?.interval ?? null;
+
+      // Map plans by recurring unit_amount to avoid dependency on stale Stripe IDs.
+      // Expected amounts (USD, monthly):
+      // - Pro: $29 -> 2900 cents
+      // - Agency: $99 -> 9900 cents
+      if (currency === "usd" && interval === "month") {
+        if (unitAmount === 2900) plan = "pro";
+        if (unitAmount === 9900) plan = "agency";
+      }
     }
 
     return new Response(JSON.stringify({
       subscribed: hasActiveSub,
       product_id: productId,
+      plan,
       subscription_end: subscriptionEnd,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

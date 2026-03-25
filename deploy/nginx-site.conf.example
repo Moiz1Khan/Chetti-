@@ -1,0 +1,22 @@
+# Example: Ubuntu /etc/nginx/sites-available/chetti
+# Adjust root to where you uploaded `dist/` (e.g. /var/www/chetti)
+# sudo ln -s /etc/nginx/sites-available/chetti /etc/nginx/sites-enabled/
+# sudo nginx -t && sudo systemctl reload nginx
+
+server {
+    listen 80;
+    server_name your-domain.com www.your-domain.com;
+    root /var/www/chetti;
+    index index.html;
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /assets/ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+}
