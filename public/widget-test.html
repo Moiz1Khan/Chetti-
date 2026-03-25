@@ -38,12 +38,13 @@
   <script>
     (function(){
       var d=document,s=d.createElement('script');
-      s.src='https://chetti.vercel.app/widget.js';
+      s.src='http://localhost:8080/widget.js';
       s.onload=function(){
         ChatbotWidget.init({
           chatbot_id:'dd8969d5-bc9a-4b1a-9a52-c20e1e1f84c1',
           position:'bottom-right',
-          color:'#7c3aed'
+          color:'#7c3aed',
+          base_url:'http://localhost:8080'
         });
       };
       d.body.appendChild(s);

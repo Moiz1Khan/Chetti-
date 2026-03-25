@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
+import { uuid } from "@/lib/uuid";
 
 const ApiKeysPage = () => {
   const { user } = useAuth();
@@ -33,7 +34,7 @@ const ApiKeysPage = () => {
 
   const createMutation = useMutation({
     mutationFn: async () => {
-      const rawKey = `cbai_${crypto.randomUUID().replace(/-/g, "")}`;
+      const rawKey = `cbai_${uuid().replace(/-/g, "")}`;
       const prefix = rawKey.slice(0, 12) + "...";
       const encoder = new TextEncoder();
       const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(rawKey));

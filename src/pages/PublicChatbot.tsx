@@ -10,6 +10,7 @@ import TypingIndicator from "@/components/chat/TypingIndicator";
 import MessageReactions from "@/components/chat/MessageReactions";
 import { useIdleMessage } from "@/hooks/use-idle-message";
 import { getIconComponent } from "@/components/dashboard/AvatarPickerModal";
+import { uuid } from "@/lib/uuid";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -30,7 +31,7 @@ const PublicChatbot = () => {
   const [sessionId] = useState(() => {
     const stored = localStorage.getItem(`chatbot-session-${chatbotId}`);
     if (stored) return stored;
-    const id = crypto.randomUUID();
+    const id = uuid();
     localStorage.setItem(`chatbot-session-${chatbotId}`, id);
     return id;
   });
@@ -202,7 +203,7 @@ const PublicChatbot = () => {
   const resetConversation = () => {
     setMessages([]);
     setShowQuickReplies(true);
-    const newId = crypto.randomUUID();
+    const newId = uuid();
     localStorage.setItem(`chatbot-session-${chatbotId}`, newId);
   };
 
@@ -294,14 +295,8 @@ const PublicChatbot = () => {
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                     </div>
                   )}
-                  {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-border/50">
-                      <p className="text-xs text-muted-foreground mb-1">Sources:</p>
-                      {msg.sources.map((s, j) => (
-                        <span key={j} className="text-xs text-muted-foreground/80 block truncate">📄 {s.file_name}</span>
-                      ))}
-                    </div>
-                  )}
+                  {/* Hide knowledge-base sources in the public UI.
+                      Sources are still returned from the backend. */}
                 </div>
                 <MessageReactions
                   reactions={msg.reactions || []}

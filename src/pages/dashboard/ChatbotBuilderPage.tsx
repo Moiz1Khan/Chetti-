@@ -756,16 +756,9 @@ const ChatbotBuilderPage = () => {
                       {msg.role === "assistant" && isStreaming && i === chatMessages.length - 1 && (
                         <span className="inline-block w-1.5 h-4 ml-0.5 bg-foreground/50 animate-pulse" />
                       )}
-                      {msg.role === "assistant" && msg.sources && msg.sources.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-border/60 text-[10px] text-muted-foreground space-y-0.5">
-                          <p className="font-medium text-foreground/80">Sources</p>
-                          {msg.sources.map((s, j) => (
-                            <p key={j} className="truncate" title={s.content_preview}>
-                              · {s.file_name}
-                            </p>
-                          ))}
-                        </div>
-                      )}
+                      {/* Intentionally hide knowledge-base sources in the UI.
+                          Sources are still returned from the backend (for debugging/auditing),
+                          but we don't show them to users. */}
                     </div>
                   </div>
                 ))}

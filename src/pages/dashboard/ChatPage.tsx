@@ -24,6 +24,7 @@ import TypingIndicator from "@/components/chat/TypingIndicator";
 import MessageReactions from "@/components/chat/MessageReactions";
 import ChatInputBar, { type ChatAttachment } from "@/components/chat/ChatInputBar";
 import { getIconComponent } from "@/components/dashboard/AvatarPickerModal";
+import { uuid } from "@/lib/uuid";
 
 type ChatMessage = {
   id?: string;
@@ -47,7 +48,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const [sessionId, setSessionId] = useState(() => crypto.randomUUID());
+  const [sessionId, setSessionId] = useState(() => uuid());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
   const [showQuickReplies, setShowQuickReplies] = useState(true);
@@ -319,7 +320,7 @@ const ChatPage = () => {
 
   const resetConversation = () => {
     setMessages([]);
-    setSessionId(crypto.randomUUID());
+    setSessionId(uuid());
     setShowQuickReplies(true);
     queryClient.invalidateQueries({ queryKey: ["messages"] });
   };
@@ -480,26 +481,8 @@ const ChatPage = () => {
                     )}
                   </div>
 
-                  {/* Sources */}
-                  {!isUser && msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {msg.sources
-                        .filter((s, idx, arr) => arr.findIndex((x) => x.file_name === s.file_name) === idx)
-                        .map((source, si) => (
-                          <Tooltip key={si}>
-                            <TooltipTrigger asChild>
-                              <Badge variant="outline" className="text-xs cursor-help gap-1 bg-primary/5 border-primary/20">
-                                <FileText className="h-3 w-3" />
-                                {source.file_name}
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-xs">
-                              <p className="text-xs">{source.content_preview}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        ))}
-                    </div>
-                  )}
+                  {/* Intentionally hide knowledge-base sources in the UI.
+                      Sources are still stored/returned from the backend. */}
 
                   {/* Reactions */}
                   <MessageReactions

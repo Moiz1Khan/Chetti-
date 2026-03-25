@@ -58,7 +58,7 @@ const ShareChatbotDialog = ({ chatbotId, chatbotName, open, onOpenChange }: Shar
 
   const iframeCode = `<iframe\n  src="${publicUrl}"\n  width="400"\n  height="600"\n  style="border:none;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.15);"\n></iframe>`;
 
-  const widgetCode = `<script>\n(function(){\n  var d=document,s=d.createElement('script');\n  s.src='${baseUrl}/widget.js';\n  s.onload=function(){\n    ChatbotWidget.init({\n      chatbot_id:'${chatbotId}',\n      position:'bottom-right',\n      color:'${primaryColor}'\n    });\n  };\n  d.body.appendChild(s);\n})();\n</script>`;
+  const widgetCode = `<script>\n(function(){\n  var d=document,s=d.createElement('script');\n  s.src='${baseUrl}/widget.js';\n  s.onload=function(){\n    ChatbotWidget.init({\n      chatbot_id:'${chatbotId}',\n      position:'bottom-right',\n      color:'${primaryColor}',\n      base_url:'${baseUrl}'\n    });\n  };\n  d.body.appendChild(s);\n})();\n</script>`;
 
   const copyText = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
