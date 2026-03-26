@@ -74,8 +74,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-6 sm:py-8">
+      <div className="w-full max-w-md space-y-6 sm:space-y-8">
         <div className="text-center">
           <Link to="/" className="inline-flex items-center gap-2 font-display font-bold text-2xl text-foreground mb-2">
             <img src="/logo.png" alt="Chetti" className="h-10 w-10 rounded-xl" />
@@ -84,7 +84,7 @@ const Signup = () => {
           <p className="text-muted-foreground mt-2">Create your account and start building chatbots.</p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-8 shadow-sm">
           <form onSubmit={handleSignup} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>

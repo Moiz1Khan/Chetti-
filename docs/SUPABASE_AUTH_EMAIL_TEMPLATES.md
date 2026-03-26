@@ -25,35 +25,33 @@ Many clients support **dark mode**; colors use inline styles (like your welcome 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-    <div style="background:linear-gradient(135deg,#18181b,#27272a);padding:40px 32px;text-align:center;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:#6366f1;border-radius:14px;margin-bottom:16px;">
-        <span style="font-size:28px;">🤖</span>
-      </div>
-      <h1 style="color:#ffffff;font-size:22px;margin:0;font-weight:700;">Verify your email</h1>
-      <p style="color:#a1a1aa;font-size:14px;margin:12px 0 0;line-height:1.5;">You're one step away from Chetti</p>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Account Security</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Verify your email</h1>
     </div>
-    <div style="padding:32px;">
-      <p style="color:#18181b;font-size:16px;line-height:1.6;margin:0 0 8px;">Hi there,</p>
-      <p style="color:#52525b;font-size:15px;line-height:1.6;margin:0 0 24px;">
-        Thanks for signing up. Please confirm your email address so we know this is really you.
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#0f172a;font-size:15px;line-height:1.7;margin:0 0 14px;">Hi there,</p>
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        Welcome to Chetti. Confirm your email address to activate your workspace and launch your AI assistant.
       </p>
       <div style="text-align:center;margin:28px 0;">
-        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
           Confirm email address
         </a>
       </div>
-      <p style="color:#a1a1aa;font-size:13px;line-height:1.6;margin:24px 0 0;border-top:1px solid #f4f4f5;padding-top:24px;">
-        If you didn't create an account with Chetti, you can safely ignore this email.
+      <p style="color:#64748b;font-size:13px;line-height:1.7;margin:24px 0 0;border-top:1px solid #e2e8f0;padding-top:20px;">
+        If you did not create a Chetti account, you can safely ignore this email.
       </p>
-      <p style="color:#d4d4d8;font-size:12px;line-height:1.5;margin:16px 0 0;word-break:break-all;">
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
         Button not working? Copy and paste this link into your browser:<br>
-        <span style="color:#71717a;">{{ .ConfirmationURL }}</span>
+        <span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
       </p>
     </div>
   </div>
-  <p style="text-align:center;color:#a1a1aa;font-size:12px;margin:24px;padding:0 16px;">
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
     © Chetti · Paisol Technology
   </p>
 </body>
@@ -62,9 +60,9 @@ Many clients support **dark mode**; colors use inline styles (like your welcome 
 
 ---
 
-## 2. Reset password
+## 2. Invite user
 
-**Subject:** `Reset your Chetti password`
+**Subject:** `You're invited to Chetti`
 
 **Body (HTML):**
 
@@ -75,33 +73,28 @@ Many clients support **dark mode**; colors use inline styles (like your welcome 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-    <div style="background:linear-gradient(135deg,#18181b,#27272a);padding:40px 32px;text-align:center;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:#6366f1;border-radius:14px;margin-bottom:16px;">
-        <span style="font-size:28px;">🔐</span>
-      </div>
-      <h1 style="color:#ffffff;font-size:22px;margin:0;font-weight:700;">Password reset</h1>
-      <p style="color:#a1a1aa;font-size:14px;margin:12px 0 0;line-height:1.5;">We received a request for your account</p>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Team Collaboration</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">You're invited to Chetti</h1>
     </div>
-    <div style="padding:32px;">
-      <p style="color:#52525b;font-size:15px;line-height:1.6;margin:0 0 24px;">
-        Click the button below to choose a new password. This link won't stay valid forever.
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        You have been invited to join a Chetti workspace. Accept this invitation to get started.
       </p>
       <div style="text-align:center;margin:28px 0;">
-        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
-          Reset password
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
+          Accept invite
         </a>
       </div>
-      <p style="color:#a1a1aa;font-size:13px;line-height:1.6;margin:24px 0 0;border-top:1px solid #f4f4f5;padding-top:24px;">
-        If you didn't request a reset, you can ignore this email — your password will stay the same.
-      </p>
-      <p style="color:#d4d4d8;font-size:12px;line-height:1.5;margin:16px 0 0;word-break:break-all;">
-        Copy link:<br><span style="color:#71717a;">{{ .ConfirmationURL }}</span>
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
+        Invite link:<br><span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
       </p>
     </div>
   </div>
-  <p style="text-align:center;color:#a1a1aa;font-size:12px;margin:24px;padding:0 16px;">
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
     © Chetti · Paisol Technology
   </p>
 </body>
@@ -123,29 +116,28 @@ Many clients support **dark mode**; colors use inline styles (like your welcome 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-    <div style="background:linear-gradient(135deg,#18181b,#27272a);padding:40px 32px;text-align:center;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:#6366f1;border-radius:14px;margin-bottom:16px;">
-        <span style="font-size:28px;">✨</span>
-      </div>
-      <h1 style="color:#ffffff;font-size:22px;margin:0;font-weight:700;">Sign in to Chetti</h1>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Instant Access</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Sign in to Chetti</h1>
     </div>
-    <div style="padding:32px;">
-      <p style="color:#52525b;font-size:15px;line-height:1.6;margin:0 0 24px;">
-        Use the button below to sign in. No password needed.
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        Your secure magic link is ready. Use it to sign in instantly without a password.
       </p>
       <div style="text-align:center;margin:28px 0;">
-        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
-          Sign in
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
+          Sign in now
         </a>
       </div>
-      <p style="color:#d4d4d8;font-size:12px;line-height:1.5;margin:16px 0 0;word-break:break-all;">
-        {{ .ConfirmationURL }}
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
+        Login link:<br><span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
       </p>
     </div>
   </div>
-  <p style="text-align:center;color:#a1a1aa;font-size:12px;margin:24px;padding:0 16px;">
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
     © Chetti · Paisol Technology
   </p>
 </body>
@@ -158,11 +150,131 @@ Many clients support **dark mode**; colors use inline styles (like your welcome 
 
 **Subject:** `Confirm your new email for Chetti`
 
-**Body (HTML):** Same structure as “Confirm sign up”, but you can use this copy:
+**Body (HTML):**
 
-- Title: **Confirm your new email**
-- Body paragraph: `You asked to change the email on your Chetti account. Confirm the new address with the button below.`
-- Button: `Confirm new email` with `href="{{ .ConfirmationURL }}"`
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Account Update</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Confirm your new email</h1>
+    </div>
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        You asked to change the email on your Chetti account. Confirm the new address using the button below.
+      </p>
+      <div style="text-align:center;margin:28px 0;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
+          Confirm new email
+        </a>
+      </div>
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
+        Confirmation link:<br><span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
+      </p>
+    </div>
+  </div>
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
+    © Chetti · Paisol Technology
+  </p>
+</body>
+</html>
+```
+
+---
+
+## 5. Reset password
+
+**Subject:** `Reset your Chetti password`
+
+**Body (HTML):**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Access Recovery</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Reset your password</h1>
+    </div>
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        We received a request to reset your Chetti password. Click below to choose a new one.
+      </p>
+      <div style="text-align:center;margin:28px 0;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
+          Reset password
+        </a>
+      </div>
+      <p style="color:#64748b;font-size:13px;line-height:1.7;margin:24px 0 0;border-top:1px solid #e2e8f0;padding-top:20px;">
+        If you did not request this, you can ignore this email and your current password will remain unchanged.
+      </p>
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
+        Reset link:<br><span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
+      </p>
+    </div>
+  </div>
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
+    © Chetti · Paisol Technology
+  </p>
+</body>
+</html>
+```
+
+---
+
+## 6. Reauthentication
+
+**Subject:** `Confirm it's you`
+
+**Body (HTML):**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Sensitive Action</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Confirm it's you</h1>
+    </div>
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
+        For your security, please reauthenticate before continuing this sensitive action.
+      </p>
+      <div style="text-align:center;margin:28px 0;">
+        <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 30px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
+          Continue securely
+        </a>
+      </div>
+      <p style="color:#64748b;font-size:12px;line-height:1.6;margin:16px 0 0;word-break:break-all;">
+        Verification link:<br><span style="color:#0ea5e9;">{{ .ConfirmationURL }}</span>
+      </p>
+    </div>
+  </div>
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
+    © Chetti · Paisol Technology
+  </p>
+</body>
+</html>
+```
 
 ---
 

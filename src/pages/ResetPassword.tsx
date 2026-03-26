@@ -43,15 +43,15 @@ const ResetPassword = () => {
 
   if (!ready) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 py-6 sm:py-8">
         <p className="text-muted-foreground">Invalid or expired reset link.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-6 sm:py-8">
+      <div className="w-full max-w-md space-y-6 sm:space-y-8">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 font-display font-bold text-2xl text-foreground mb-2">
             <img src="/logo.png" alt="Chetti" className="h-10 w-10 rounded-xl" />
@@ -60,7 +60,7 @@ const ResetPassword = () => {
           <p className="text-muted-foreground mt-2">Set your new password</p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-8 shadow-sm">
           <form onSubmit={handleUpdate} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="password">New Password</Label>

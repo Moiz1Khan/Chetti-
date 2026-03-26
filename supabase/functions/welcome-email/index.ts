@@ -29,6 +29,8 @@ serve(async (req) => {
     const name = full_name || "there";
     const appBase =
       Deno.env.get("PUBLIC_APP_URL")?.replace(/\/$/, "") || "https://chetti.vercel.app";
+    const logoUrl =
+      "https://res.cloudinary.com/dxfejax3u/image/upload/v1774506070/logo_mkjcfn.png";
 
     const html = `
 <!DOCTYPE html>
@@ -37,40 +39,42 @@ serve(async (req) => {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-    <div style="background:linear-gradient(135deg,#18181b,#27272a);padding:40px 32px;text-align:center;">
-      <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:#6366f1;border-radius:14px;margin-bottom:16px;">
-        <span style="font-size:28px;">🤖</span>
-      </div>
-      <h1 style="color:#ffffff;font-size:24px;margin:0;">Welcome to Chetti!</h1>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
+  <div style="max-width:560px;margin:32px auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 8px 30px rgba(15,23,42,0.08);">
+    <div style="padding:32px 28px;text-align:center;background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#f5f3ff);border-bottom:1px solid #e2e8f0;">
+      <img src="${logoUrl}" alt="Chetti" width="128" style="display:block;margin:0 auto 14px;height:auto;">
+      <p style="margin:0;color:#0f172a;font-size:12px;letter-spacing:1.8px;text-transform:uppercase;font-weight:700;">Welcome Aboard</p>
+      <h1 style="color:#0f172a;font-size:24px;line-height:1.3;margin:10px 0 0;font-weight:800;">Welcome to Chetti!</h1>
     </div>
-    <div style="padding:32px;">
-      <p style="color:#18181b;font-size:16px;line-height:1.6;margin:0 0 16px;">
+    <div style="padding:30px 28px 32px;background:#ffffff;">
+      <p style="color:#0f172a;font-size:16px;line-height:1.7;margin:0 0 16px;">
         Hey ${name}! 👋
       </p>
-      <p style="color:#52525b;font-size:15px;line-height:1.6;margin:0 0 24px;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 24px;">
         Thanks for joining Chetti. You now have the power to create intelligent chatbots, train them on your own data, and embed them anywhere on the web.
       </p>
-      <p style="color:#52525b;font-size:15px;line-height:1.6;margin:0 0 8px;font-weight:600;">
+      <p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 8px;font-weight:700;">
         Here's what you can do next:
       </p>
-      <ul style="color:#52525b;font-size:15px;line-height:1.8;margin:0 0 24px;padding-left:20px;">
+      <ul style="color:#334155;font-size:15px;line-height:1.8;margin:0 0 24px;padding-left:20px;">
         <li>Create your first chatbot</li>
         <li>Upload documents to train your AI</li>
         <li>Customize appearance & branding</li>
         <li>Embed it on your website</li>
       </ul>
       <div style="text-align:center;margin:32px 0;">
-        <a href="${appBase}/dashboard" style="display:inline-block;background:#6366f1;color:#ffffff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">
+        <a href="${appBase}/dashboard" style="display:inline-block;background:linear-gradient(135deg,#06b6d4,#4f46e5);color:#ffffff;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;">
           Go to Dashboard →
         </a>
       </div>
-      <p style="color:#a1a1aa;font-size:13px;text-align:center;margin:24px 0 0;border-top:1px solid #f4f4f5;padding-top:24px;">
+      <p style="color:#64748b;font-size:13px;text-align:center;line-height:1.7;margin:24px 0 0;border-top:1px solid #e2e8f0;padding-top:20px;">
         If you have any questions, just reply to this email. We're happy to help!
       </p>
     </div>
   </div>
+  <p style="text-align:center;color:#64748b;font-size:12px;margin:20px;padding:0 16px;">
+    © Chetti · Paisol Technology
+  </p>
 </body>
 </html>`;
 
