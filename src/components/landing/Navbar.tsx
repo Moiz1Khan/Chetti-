@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -14,12 +14,39 @@ const navLinks = [
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleSectionNav = (hash: string) => {
+    if (location.pathname !== "/") {
+      navigate(`/${hash}`);
+      setMobileOpen(false);
+      return;
+    }
+
+    const sectionId = hash.replace("#", "");
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    setMobileOpen(false);
+  };
+
+  const handleBrandClick = () => {
+    if (location.pathname === "/") {
+      window.location.reload();
+      return;
+    }
+    navigate("/");
+  };
 
   return (
     <header
@@ -28,21 +55,27 @@ const Navbar = () => {
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
-        <a href="#" className="flex items-center gap-2.5 font-display font-bold text-xl text-foreground">
+        <button
+          type="button"
+          onClick={handleBrandClick}
+          className="flex items-center gap-2.5 font-display font-bold text-xl text-foreground"
+          aria-label="Refresh Chetti home"
+        >
           <img src="/logo.png" alt="Chetti" className="h-8 w-8 rounded-lg" />
           Chetti
-        </a>
+        </button>
 
         {/* Desktop nav - pill style like ReactBits */}
         <nav className="hidden md:flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 backdrop-blur-xl px-2 py-1.5">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.href}
-              href={link.href}
+              type="button"
+              onClick={() => handleSectionNav(link.href)}
               className="text-sm font-medium text-muted-foreground hover:text-foreground px-4 py-1.5 rounded-full hover:bg-secondary transition-all duration-200"
             >
               {link.label}
-            </a>
+            </button>
           ))}
         </nav>
 
@@ -78,14 +111,14 @@ const Navbar = () => {
           >
             <nav className="container flex flex-col gap-3 py-4">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.href}
-                  href={link.href}
+                  type="button"
+                  onClick={() => handleSectionNav(link.href)}
                   className="text-sm font-medium text-muted-foreground hover:text-foreground py-1.5"
-                  onClick={() => setMobileOpen(false)}
                 >
                   {link.label}
-                </a>
+                </button>
               ))}
               <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
                 <Button variant="ghost" size="sm" asChild><Link to="/login">Log in</Link></Button>

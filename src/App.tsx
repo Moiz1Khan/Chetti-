@@ -38,6 +38,7 @@ import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import MissingSupabaseConfig from "@/components/MissingSupabaseConfig";
+import ScrollToTop from "@/components/ScrollToTop";
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
           <MissingSupabaseConfig />
         ) : (
         <BrowserRouter>
+          <ScrollToTop />
           <AuthProvider>
             <Routes>
               <Route path="/" element={<Index />} />
