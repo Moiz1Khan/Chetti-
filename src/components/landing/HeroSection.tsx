@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Send, Bot, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const chatMessages = [
   { role: "user" as const, text: "What's your return policy?" },
@@ -55,12 +56,14 @@ const HeroSection = () => (
         </p>
 
         <div className="flex flex-wrap gap-4">
-          <Button variant="hero" size="lg" className="text-base px-8">
-            Get Started Free
-            <ArrowRight className="ml-1 h-4 w-4" />
+          <Button variant="hero" size="lg" className="text-base px-8" asChild>
+            <Link to="/signup">
+              Get Started Free
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
           </Button>
-          <Button variant="hero-outline" size="lg" className="text-base px-8">
-            View Demo
+          <Button variant="hero-outline" size="lg" className="text-base px-8" asChild>
+            <Link to="/features">View Demo</Link>
           </Button>
         </div>
 

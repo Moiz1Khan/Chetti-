@@ -11,8 +11,9 @@ test.describe.serial("Responsive UI", () => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/");
     await page.getByRole("button", { name: /open menu/i }).click();
-    await expect(page.getByRole("link", { name: /log in/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /get started free/i })).toBeVisible();
+    const mobileMenu = page.locator("header nav").last();
+    await expect(mobileMenu.getByRole("link", { name: /log in/i })).toBeVisible();
+    await expect(mobileMenu.getByRole("link", { name: /get started free/i })).toBeVisible();
   });
 
   test("RESP-002 Landing renders on tablet viewport", async ({ page }) => {

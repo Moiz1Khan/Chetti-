@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import { Link } from "react-router-dom";
 
 const CTASection = () => (
-  <section className="py-28">
+  <section className="py-28 overflow-hidden">
     <div className="container">
       <AnimatedSection className="relative rounded-3xl overflow-hidden">
         {/* Gradient background */}
@@ -33,16 +34,20 @@ const CTASection = () => (
               <Button
                 size="lg"
                 className="text-base px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
+                asChild
               >
-                Create Free Account
-                <ArrowRight className="ml-1 h-4 w-4" />
+                <Link to="/signup">
+                  Create Free Account
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
               <Button
                 variant="hero-outline"
                 size="lg"
                 className="text-base px-8 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50"
+                asChild
               >
-                View Demo
+                <Link to="/features">View Demo</Link>
               </Button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "./AnimatedSection";
+import { Link } from "react-router-dom";
 
 const plans = [
   {
@@ -33,7 +34,7 @@ const plans = [
 ];
 
 const PricingSection = () => (
-  <section id="pricing" className="py-28 relative">
+  <section id="pricing" className="py-28 relative overflow-hidden">
     {/* Background glow */}
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-primary/5 blur-[150px]" />
 
@@ -84,13 +85,25 @@ const PricingSection = () => (
                   </li>
                 ))}
               </ul>
-              <Button
-                variant={plan.highlighted ? "hero" : "outline"}
-                className="w-full"
-                size="lg"
-              >
-                {plan.cta}
-              </Button>
+              {plan.name === "Agency" ? (
+                <Button
+                  variant={plan.highlighted ? "hero" : "outline"}
+                  className="w-full"
+                  size="lg"
+                  asChild
+                >
+                  <Link to="/contact">{plan.cta}</Link>
+                </Button>
+              ) : (
+                <Button
+                  variant={plan.highlighted ? "hero" : "outline"}
+                  className="w-full"
+                  size="lg"
+                  asChild
+                >
+                  <Link to="/signup">{plan.cta}</Link>
+                </Button>
+              )}
             </div>
           </AnimatedSection>
         ))}
